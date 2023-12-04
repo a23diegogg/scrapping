@@ -35,37 +35,32 @@ public class Prueba_selenium {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        // driver.findElement(By.className("event__info")).click();
+        Duration duracionEspera = Duration.ofSeconds(40);
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        boolean encontrado = false;
 
-        // String text = driver.findElement(By.className("leagues--live")).getText();
+        //Nota: 28 son las veces que el dia 5 hay q abrir mostrar mas partidos, el codigo era este:
+        // countMostrarPartidos(driver.findElement(By.className("leagues--live")).getText()) pero va mal, prueba y ira como va
+        for (int i = 0; i < 38;) {
+            WebDriverWait wait = new WebDriverWait(driver, duracionEspera);
+            js.executeScript("window.scrollBy(0, window.innerHeight)");
 
-        // System.out.println(text);
-        // System.out.println(countMostrarPartidos(text));
+            try {
+                WebElement elemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("event__expander--close")));
+                elemento.click();
+                System.out.println("Se hizo clic en el elemento.");
+                i++;
+            } catch (Exception e) {
+                System.out.println("El elemento no se encontró después del tiempo de espera.");
+            }
+            try {
+                Thread.sleep(1000); // Pausa de 1 segundos entre desplazamientos
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
-        for (int i = 0; i < countMostrarPartidos(driver.findElement(By.className("leagues--live")).getText()); i++) {
-            driver.findElement(By.xpath("//div[@class='arrow event__expander event__expander--open']")).click();
-            driver.quit();
         }
 
-        List<WebElement> pestañasCerradas = driver
-                .findElements(By.xpath("//svg[@class='arrow event__expander event__expander--close']"));
-        //// div[text()='Mostrar todos los partidos de esta liga']")
-        // for (int i = 0; i <
-        //// countMostrarPartidos(driver.findElement(By.className("leagues--live")).getText());
-        //// i++) {
-        for (WebElement pestaña : pestañasCerradas) {
-
-            pestaña.click();
-
-        }
-        // }
-
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
         String text = driver.findElement(By.className("leagues--live")).getText();
         System.out.println(text);
         driver.quit();
